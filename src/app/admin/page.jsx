@@ -1,27 +1,19 @@
+import AdminForm from '@/components/admin-form';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { NavigationMenu } from '@/components/ui/navigation-menu'
 import Link from 'next/link';
-import React from 'react'
+import React, { useActionState } from 'react'
 
 export default function Admin() {
+  // const [state,dispatch,isPending] = useActionState()
   return (
-    <div>
-      <NavigationMenu>
-        <nav className="hidden md:flex gap-4">
-          <Link href="/about">
-            <Button variant="ghost">About</Button>
-          </Link>
-          <Link href="/services">
-            <Button variant="ghost">Services</Button>
-          </Link>
-          <Link href="/contact">
-            <Button variant="ghost">Contact</Button>
-          </Link>
-        </nav>
-      </NavigationMenu>
-      <form action="" className='flex flex-col items-center justify-start'>
-
-      </form>
+    <div className='flex items-center justify-center'>
+      
+      <Card className='flex items-center w-[50vw] px-12 justify-center mx-auto'>
+     <AdminForm/>
+      </Card>
     </div>
   );
 }

@@ -12,9 +12,10 @@ export async function POST(req){
   const author = 'admin';
   const tagsString = tags.join(',');
   const categoriesString = categories.join(',');
+  const slug = title.toLowerCase().replace(/\s+/g, '-');
     const [result] = await db.query(
-      'INSERT INTO posts (post_title,content,author,tags,imageUrl,categories) VALUES (?,?,?,?,?,?)',
-      [title, content,author, tagsString, imageUrl, categoriesString]
+      'INSERT INTO posts (post_title,content,author,tags,imageUrl,categories,slug) VALUES (?,?,?,?,?,?,?)',
+      [title, content,author, tagsString, imageUrl, categoriesString,slug]
     );
     return Response.json(result);
 }
