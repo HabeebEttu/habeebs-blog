@@ -18,7 +18,7 @@ export default function Header() {
           <Input
             placeholder="Search articles"
             className={cn(
-              "text-[#01000548] bg-white h-7 w-72 placeholder:text-sm"
+              "text-[#01000548] bg-transparent border-gray-600 h-7 w-72 placeholder:text-xs text-xs"
             )}
           />
           <Search className="text-[#01000548] absolute top-1 right-2" />

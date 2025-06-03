@@ -28,8 +28,9 @@ export default function FeaturedPost() {
           <div className="text-xs text-white pt-3 ">May 20, 2025 · 8 min read</div>
           
             <Button
-              variant="default"
-              className={cn("bg-blue-700 hover:bg-blue-800 text-white text-sm mt-10 px-2 py-0.5 flex items-center gap-2 w-fit my-2")}
+            variant="default"
+            size={'sm'}
+              className={cn("bg-blue-700 hover:bg-blue-800 text-white text-xs mt-10 px-3 py-0 flex items-center gap-2 w-fit my-2 rounded-sm")}
             >
               Read Article <ArrowRight size={16} />
             </Button>
