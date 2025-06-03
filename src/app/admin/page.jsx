@@ -4,14 +4,14 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { NavigationMenu } from '@/components/ui/navigation-menu'
 import Link from 'next/link';
-import React, { useActionState } from 'react'
+import React from 'react'
 
 export default function Admin() {
-  // const [state,dispatch,isPending] = useActionState()
+  
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center justify-center w-[100vw] h-[100vh] '>
       
-      <Card className='flex items-center w-[50vw] px-12 justify-center mx-auto'>
+      <Card className='flex items-center w-[30vw] px-12 justify-center mx-auto rounded-sm'>
      <AdminForm/>
       </Card>
     </div>
