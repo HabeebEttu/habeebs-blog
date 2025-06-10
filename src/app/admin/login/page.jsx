@@ -1,18 +1,16 @@
-import AdminForm from '@/components/admin-form';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { NavigationMenu } from '@/components/ui/navigation-menu'
-import Link from 'next/link';
-import React from 'react'
+import AdminForm from "@/components/admin-form";
+import { Card } from "@/components/ui/card";
+import React from "react";
 
-export default function Admin() {
-  
+export default function AdminLogin() {
   return (
-    <div className='flex items-center justify-center w-[100vw] h-[100vh] '>
-      
-      <Card className='flex items-center w-[30vw] px-12 justify-center mx-auto rounded-sm'>
-     <AdminForm/>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 p-4">
+      <Card className="w-full max-w-md p-8 space-y-6 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg shadow-2xl hover:shadow-gray-700/30 transition-all duration-300">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
+          <p className="text-gray-400">Please sign in to continue</p>
+        </div>
+        <AdminForm />
       </Card>
     </div>
   );
