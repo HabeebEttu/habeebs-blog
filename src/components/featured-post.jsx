@@ -33,16 +33,16 @@ export default function FeaturedPost() {
           </div>
 
           {/* Meta Info */}
-          <div className="text-[12px] text-white pt-[12px]">
+          <div className="text-[12px] text-white py-[12px]">
             May 20, 2025 · 8 min read
           </div>
-
+<div className="py-6"></div>
           {/* Button */}
           <Button
             variant="default"
             size="sm"
             className={cn(
-              "bg-blue-700 hover:bg-blue-800 text-white text-[12px] mt-[40px] px-[12px] py-[2px] flex items-center gap-[8px] w-fit my-[8px] rounded-sm"
+              "bg-blue-700 hover:bg-blue-800 text-white text-[12px] mt-[70px] px-[12px] py-[2px] flex items-center gap-[8px] w-fit my-[8px] rounded-sm"
             )}
           >
             Read Article <ArrowRight size={16} />

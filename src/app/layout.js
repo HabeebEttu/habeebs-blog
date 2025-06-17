@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/header";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,12 +29,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable} bg-gray-900`}
+    >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${roboto.className} antialiased`}>
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

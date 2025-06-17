@@ -13,7 +13,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="bg-gray-900 w-full min-h-screen">
-      <Header />
+      
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
         <FeaturedPost />
@@ -31,7 +31,7 @@ export default function Home() {
         <CategoriesCard />
       </main>
       <ExploreTopics />
-      <Footer/>
+      
     </div>
   );
 }
