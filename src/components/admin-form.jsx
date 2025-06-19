@@ -8,6 +8,9 @@ import { cn } from '@/lib/utils';
 import FormField from './FormField';
 import * as Yup from "yup";
 import { signIn } from "next-auth/react";
+import { login } from '@/lib/actions/auth';
+import { loginWithGithub } from '@/actions';
+import * as actions from '@/actions';
 
 export default function AdminForm() {
   const formik = useFormik({
@@ -25,7 +28,11 @@ export default function AdminForm() {
     }),
     onSubmit: (values) => {
       // Handle form submission
-      console.log(values);
+      console.log('hello');
+      
+      login(values.email, values.password);
+      console.log('run');
+      
     },
   });
 

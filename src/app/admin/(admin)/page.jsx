@@ -6,10 +6,12 @@ import { LucidePenTool, Plus, Search, Settings, Users, FileText, BarChart } from
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import * as actions from '@/actions'
+import { signOut } from 'next-auth/react'
 
 export default async function AdminPage() {
-  const cookieStore = cookies();
-  const token = await cookieStore.get("token");
+  const cookieStore = await cookies();
+  const token = await cookieStore.get("next-auth.session-token");
 
   if (!token) {
     redirect("/admin/login");
@@ -31,13 +33,17 @@ export default async function AdminPage() {
             />
             <Search className="text-[#01000548] absolute top-1/2 -translate-y-1/2 right-2 h-4 w-4" />
           </div>
+          <form method="POST" >
           <Button
-            variant="outline"
-            size="sm"
-            className="border-gray-600 text-black hover:text-white hover:bg-gray-800"
+              variant="outline"
+              size="sm"
+              className="border-gray-600 text-black hover:text-white hover:bg-gray-800"
+              type="submit"
+              onClick={async (e) => {signOut() }}
           >
             Logout
           </Button>
+          </form>
         </div>
       </header>
 

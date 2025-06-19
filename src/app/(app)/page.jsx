@@ -2,13 +2,9 @@ import AboutCard from "@/components/AboutCard";
 import CategoriesCard from "@/components/CategoriesCard";
 import ExploreTopics from "@/components/ExploreTopics";
 import FeaturedPost from "@/components/featured-post";
-import Footer from "@/components/Footer";
-import Header from "@/components/header";
 import LatestPosts from "@/components/LatestPosts";
 import PopularPosts from "@/components/PopularPosts";
-import PopularPostsCard from "@/components/PopularPostsCard";
 import Suscribe from "@/components/Suscribe";
-import Image from "next/image";
 
 export default function Home() {
   return (

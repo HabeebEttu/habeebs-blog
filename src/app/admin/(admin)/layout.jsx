@@ -27,14 +27,18 @@ export const metadata = {
   description: "A blog application where users can view posts about their favorite developer technologies and leave comments about them.",
 };
 
-export default function RootLayout({ children }) {
+export default function AuthLayout({ children }) {
+  
   return (
     <html lang="en" className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-          <body className={`${roboto.className} antialiased`}>
-              <AdminApp>{children}</AdminApp>
+      <body className={`${roboto.className} antialiased`}>
+        
+        <AdminApp>{children}</AdminApp>
+        
+        
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function AdminApp({children}) {
   return (
-    <SessionProvider>
+    <SessionProvider session={null} >
                     {children}
                   </SessionProvider>
   )
