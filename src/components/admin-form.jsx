@@ -87,7 +87,7 @@ export default function AdminForm() {
           type="button"
           variant="outline"
           className="w-full border-gray-700"
-          onClick={() => signIn("github")}
+          onClick={() => signIn("github", { callbackUrl: "/admin" })}
         >
           GitHub
         </Button>

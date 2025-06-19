@@ -1,3 +1,4 @@
+import { db } from "@/lib/db";
 import Credentials from "@auth/core/providers/credentials";
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
@@ -21,10 +22,12 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         const { email, password } = credentials;
-
+        const user = db.query(`SELECT * FROM admin_user where email = ?`,[email]);
         
-        if (email === "user@example.com" && password === "password") {
-          return { id: 1, name: "User", email: "user@example.com" };
+        if (user) {
+          if (password === user.hashpassword) {
+            return user
+          }
         }
         return null;
       }

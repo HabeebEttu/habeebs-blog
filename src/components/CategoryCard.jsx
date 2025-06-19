@@ -11,8 +11,11 @@ const colors = [
   "#6366F1", // indigo-500
   "#14B8A6",
 ];
+const tags = [
+  ''
+]
 
-export default function CategoryCard({ title, description, noOfPosts }) {
+export default function CategoryCard({ title, description, noOfPosts ,Icon}) {
     const color = colors[Math.floor(Math.random() * colors.length)]
     const secondColor = darkenHex(color)
   return (
@@ -21,14 +24,17 @@ export default function CategoryCard({ title, description, noOfPosts }) {
         <div
           className={`p-2 rounded-md  bg-gray-800 flex items-center justify-center`}
         >
-          <LucideGlobe fill={`${color}`} color={`${secondColor}`} size={22} />
+          <Icon fill={`${color}`} color={`${secondColor}`} size={22} />
         </div>
         <span className="text-xs text-muted-foreground bg-gray-700 px-1 rounded-md ml-1">
           {noOfPosts} posts
         </span>
       </div>
       <div className="text-white capitalize text-lg text-left my-5">{title}</div>
-      <div className="text-gray-600 text-sm text-left text-wrap">{ description}</div>
+      <div className="text-gray-600 text-sm text-left text-wrap">{description}</div>
+      <div className="flex flex-wrap items-center justify-start">
+
+      </div>
     </div>
   );
 }

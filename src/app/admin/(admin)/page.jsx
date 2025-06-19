@@ -4,8 +4,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LucidePenTool, Plus, Search, Settings, Users, FileText, BarChart } from 'lucide-react'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const cookieStore = cookies();
+  const token = await cookieStore.get("token");
+
+  if (!token) {
+    redirect("/admin/login");
+  }
   return (
     <div className="bg-gray-900 w-full min-h-screen">
       <header className="flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 border-b-[0.5px] border-b-gray-800">
