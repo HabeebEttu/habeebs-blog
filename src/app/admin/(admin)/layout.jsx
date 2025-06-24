@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "@/app/globals.css";
-import { SessionProvider } from "next-auth/react";
 import AdminApp from '@/components/AdminApp.jsx'
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +35,7 @@ export default function AuthLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${roboto.className} antialiased`}>
-        
+        <Toaster position="top-right" />
         <AdminApp>{children}</AdminApp>
         
         

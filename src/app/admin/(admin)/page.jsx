@@ -8,13 +8,15 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import * as actions from '@/actions'
 import { signOut } from 'next-auth/react'
+import LogOut from '@/components/LogOut'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/auth'
 
 export default async function AdminPage() {
-  const cookieStore = await cookies();
-  const token = await cookieStore.get("next-auth.session-token");
-
-  if (!token) {
-    redirect("/admin/login");
+  const session = await getServerSession(authOptions)
+  
+  if (!session) {
+   redirect('/admin/login') // Or redirect
   }
   return (
     <div className="bg-gray-900 w-full min-h-screen">
@@ -34,15 +36,7 @@ export default async function AdminPage() {
             <Search className="text-[#01000548] absolute top-1/2 -translate-y-1/2 right-2 h-4 w-4" />
           </div>
           <form method="POST" >
-          <Button
-              variant="outline"
-              size="sm"
-              className="border-gray-600 text-black hover:text-white hover:bg-gray-800"
-              type="submit"
-              onClick={async (e) => {signOut() }}
-          >
-            Logout
-          </Button>
+          <LogOut />
           </form>
         </div>
       </header>

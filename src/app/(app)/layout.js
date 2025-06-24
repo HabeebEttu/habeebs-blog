@@ -1,5 +1,5 @@
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
 
