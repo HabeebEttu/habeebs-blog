@@ -12,7 +12,6 @@ import dynamic from 'next/dynamic'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
-// Fix the dynamic import syntax
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default),
   { ssr: false }

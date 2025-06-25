@@ -4,17 +4,44 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LucidePenTool, Plus, Search, Settings, Users, FileText, BarChart } from 'lucide-react'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import * as actions from '@/actions'
-import { signOut } from 'next-auth/react'
 import LogOut from '@/components/LogOut'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/auth'
+import StatCard from '@/components/StatCard'
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions)
-  
+  const stats = [
+    {
+      id: 1,
+      title: "Total Posts",
+      value: "24",
+      Icon: FileText,
+      color: "blue",
+    },
+    {
+      id: 2,
+      title: "Total Views",
+      value: "12.5K",
+      Icon: BarChart,
+      color: "green",
+    },
+    {
+      id: 3,
+      title: "Comments",
+      value: "89",
+      Icon: Users,
+      color: "yellow",
+    },
+    {
+      id: 4,
+      title: "Categories",
+      value: "8",
+      Icon: Settings,
+      color: "orange",
+    },
+  ];
   if (!session) {
    redirect('/admin/login') // Or redirect
   }
@@ -55,61 +82,13 @@ export default async function AdminPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gray-800 border-gray-700 text-white">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-400">Total Posts</p>
-                  <h3 className="text-2xl font-bold mt-1">24</h3>
-                </div>
-                <div className="bg-blue-700/20 p-3 rounded-full">
-                  <FileText className="h-6 w-6 text-blue-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 border-gray-700 text-white">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-400">Total Views</p>
-                  <h3 className="text-2xl font-bold mt-1">12.5K</h3>
-                </div>
-                <div className="bg-purple-700/20 p-3 rounded-full">
-                  <BarChart className="h-6 w-6 text-purple-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 border-gray-700 text-white">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-400">Comments</p>
-                  <h3 className="text-2xl font-bold mt-1">89</h3>
-                </div>
-                <div className="bg-green-700/20 p-3 rounded-full">
-                  <Users className="h-6 w-6 text-green-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 border-gray-700 text-white">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-sm text-gray-400">Categories</p>
-                  <h3 className="text-2xl font-bold mt-1">8</h3>
-                </div>
-                <div className="bg-pink-700/20 p-3 rounded-full">
-                  <Settings className="h-6 w-6 text-pink-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {
+            stats.map((stat, index) => {
+              return (
+                <StatCard key={stat.id} title={stat.title} value={stat.value} Icon={stat.Icon} color={stat.color}/>
+              )
+            })
+          }
         </div>
 
         {/* Recent Posts Table */}
