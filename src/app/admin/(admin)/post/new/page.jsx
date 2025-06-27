@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useUploadThing } from "@/lib/uploadthing";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default),
@@ -20,7 +22,25 @@ const MDEditor = dynamic(
 export default function NewPost() {
   const [imagePreview, setImagePreview] = useState(null)
   const [file, setFile] = useState(null);
+  const [categories, setCategories] = useState([]);
   const { startUpload } = useUploadThing("coverImageUploader");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -89,14 +109,17 @@ export default function NewPost() {
         </div>
         <div className="flex items-center gap-4">
           <Link href="/admin">
-            <Button variant="outline" size="sm" className="border-gray-600 text-black hover:text-white hover:bg-gray-800">
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-gray-600 text-black hover:text-white hover:bg-gray-800"
+            >
               <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
             </Button>
           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Card className="bg-gray-800 border-gray-700 text-white">
           <CardHeader>
@@ -106,72 +129,98 @@ export default function NewPost() {
             <form onSubmit={formik.handleSubmit} className="space-y-6">
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-white">Post Title</Label>
-                <Input 
-                  id="title" 
+                <Label htmlFor="title" className="text-white">
+                  Post Title
+                </Label>
+                <Input
+                  id="title"
                   name="title"
-                  value={formik.values.title} 
-                  onChange={formik.handleChange} 
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  placeholder="Enter post title" 
+                  placeholder="Enter post title"
                   className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                 />
                 {formik.touched.title && formik.errors.title ? (
-                  <div className="text-red-500 text-sm mt-1">{formik.errors.title}</div>
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.title}
+                  </div>
                 ) : null}
               </div>
 
               {/* Category and Tags */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category" className="text-white">Category</Label>
-                  <Input 
-                    id="category" 
-                    name="category"
-                    value={formik.values.category} 
-                    onChange={formik.handleChange} 
-                    onBlur={formik.handleBlur}
-                    placeholder="e.g. Frontend, Backend, UI/UX" 
-                    className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
-                  />
+                  <Label htmlFor="category" className="text-white">
+                    Category
+                  </Label>
+                  <Select
+                    onValueChange={(value) =>
+                      formik.setFieldValue("category", value)
+                    }
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 w-full p-2 rounded-md"
+                      )}
+                    >
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {formik.touched.category && formik.errors.category ? (
-                    <div className="text-red-500 text-sm mt-1">{formik.errors.category}</div>
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.category}
+                    </div>
                   ) : null}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="tags" className="text-white">Tags</Label>
-                  <Input 
-                    id="tags" 
+                  <Label htmlFor="tags" className="text-white">
+                    Tags
+                  </Label>
+                  <Input
+                    id="tags"
                     name="tags"
-                    value={formik.values.tags} 
-                    onChange={formik.handleChange} 
+                    value={formik.values.tags}
+                    onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    placeholder="e.g. react, javascript, design (comma separated)" 
+                    placeholder="e.g. react, javascript, design (comma separated)"
                     className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                   />
-                </div>  
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="featuredImage" className="text-white">Featured Image</Label>
+                <Label htmlFor="featuredImage" className="text-white">
+                  Featured Image
+                </Label>
                 <div className="flex items-center gap-4">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="border-gray-600 text-white hover:bg-gray-700"
-                    onClick={() => document.getElementById('featuredImage').click()}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="border-gray-600 text-black hover:bg-gray-700"
+                    onClick={() =>
+                      document.getElementById("featuredImage").click()
+                    }
                   >
-                    <ImageIcon className="h-4 w-4 mr-2" /> Select Image
+                    <ImageIcon className="h-4 w-4 mr-2 text-black" /> Select
+                    Image
                   </Button>
                   <span className="text-sm text-gray-400">
-                    {imagePreview ? imagePreview : 'No image selected'}
+                    {imagePreview ? imagePreview : "No image selected"}
                   </span>
-                  <input 
-                    id="featuredImage" 
+                  <input
+                    id="featuredImage"
                     name="featuredImage"
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
+                    type="file"
+                    accept="image/*"
+                    className="hidden text-black"
                     onChange={handleImageChange}
                   />
                 </div>
@@ -179,7 +228,9 @@ export default function NewPost() {
 
               {/* Markdown Editor */}
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-white">Post Content</Label>
+                <Label htmlFor="content" className="text-white">
+                  Post Content
+                </Label>
                 <div data-color-mode="dark">
                   <MDEditor
                     id="content"
@@ -192,23 +243,25 @@ export default function NewPost() {
                   />
                 </div>
                 {formik.touched.content && formik.errors.content ? (
-                  <div className="text-red-500 text-sm mt-1">{formik.errors.content}</div>
+                  <div className="text-red-500 text-sm mt-1">
+                    {formik.errors.content}
+                  </div>
                 ) : null}
               </div>
 
               {/* Submit Buttons */}
               <div className="flex justify-end gap-4 pt-4">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="border-gray-600 text-white hover:bg-gray-700"
-                  onClick={() => formik.setFieldValue('status', 'draft')}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="border-gray-600 text-black hover:bg-gray-700"
+                  onClick={() => formik.setFieldValue("status", "draft")}
                 >
                   Save as Draft
                 </Button>
-                <Button 
-                  type="submit" 
-                  className="bg-blue-700 hover:bg-blue-600"
+                <Button
+                  type="submit"
+                  className="bg-blue-700 hover:bg-blue-600 "
                 >
                   Publish Post
                 </Button>
@@ -218,6 +271,6 @@ export default function NewPost() {
         </Card>
       </main>
     </div>
-  )
+  );
 }
 

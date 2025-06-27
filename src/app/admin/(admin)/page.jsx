@@ -19,35 +19,38 @@ export default async function AdminPage() {
       value: "24",
       Icon: FileText,
       textColor: "text-blue-500",
-      bgColor:""
+      bgColor: "bg-blue-900/50",
     },
     {
       id: 2,
       title: "Total Views",
       value: "12.5K",
       Icon: BarChart,
-      color: "green",
+      textColor: "text-green-500",
+      bgColor: "bg-green-900/50",
     },
     {
       id: 3,
       title: "Comments",
       value: "89",
       Icon: Users,
-      color: "yellow",
+      textColor: "text-yellow-500",
+      bgColor: "bg-yellow-900/50",
     },
     {
       id: 4,
       title: "Categories",
       value: "8",
       Icon: Settings,
-      color: "orange",
+      textColor: "text-orange-500",
+      bgColor: "bg-orange-900/50",
     },
   ];
   if (!session) {
-   redirect('/admin/login') // Or redirect
+   redirect('/admin/login') 
   }
   return (
-    <div className="bg-gray-900 w-full min-h-screen">
+    <div className="bg-gray-900  w-full min-h-screen">
       <header className="flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 border-b-[0.5px] border-b-gray-800">
         <div className="flex flex-row items-center justify-center w-fit gap-2 bg-clip-text bg-gradient-to-r from-blue-700 via-blue-500 to-[#ee2cd4] flex-nowrap">
           <LucidePenTool fill="blue" className="text-blue-700 rotate-180" />
@@ -69,7 +72,6 @@ export default async function AdminPage() {
         </div>
       </header>
 
-      {/* Admin Dashboard */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
@@ -80,8 +82,6 @@ export default async function AdminPage() {
             </Link>
           </Button>
         </div>
-
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => {
             return (
@@ -90,7 +90,8 @@ export default async function AdminPage() {
                 title={stat.title}
                 value={stat.value}
                 Icon={stat.Icon}
-                color={stat.color}
+                textColor={stat.textColor}
+                bgColor={stat.bgColor}
               />
             );
           })}

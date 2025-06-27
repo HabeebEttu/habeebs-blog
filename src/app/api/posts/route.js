@@ -107,7 +107,7 @@ export async function POST(request) {
         console.log("Post created successfully:", newPost.id);
         return NextResponse.json(newPost, { status: 201 });
     } catch (error) {
-        console.error("Failed to create post:", error);
+        console.error("Failed to create post:", error.message);
         return NextResponse.json({ error: "An unexpected error occurred while creating the post." }, { status: 500 });
     }
 }
