@@ -10,7 +10,7 @@ export default function FormField({ label, type, placeholder ,className}) {
       <Input
         type={type}
         placeholder={placeholder}
-        className={cn(`w-[240px] text-[14px] px-[10px] py-[6px] text-white ${className}`)}
+        className={cn(`w-[240px] text-[14px] px-[10px] py-[6px] outline-none text-white ${className}`)}
       />
     </>
   );

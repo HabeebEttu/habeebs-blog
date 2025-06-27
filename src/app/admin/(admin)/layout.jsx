@@ -37,9 +37,9 @@ export default function AuthLayout({ children }) {
       <body className={`${roboto.className} antialiased`}>
         <Toaster position="top-right" />
         <AdminApp>{children}</AdminApp>
-        
-        
       </body>
     </html>
   );
 }
+
+

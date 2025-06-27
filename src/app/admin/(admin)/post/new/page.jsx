@@ -1,16 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LucidePenTool, ArrowLeft, Image as ImageIcon } from 'lucide-react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
 import dynamic from 'next/dynamic'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { useUploadThing } from "@/lib/uploadthing";
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default),
@@ -19,38 +19,61 @@ const MDEditor = dynamic(
 
 export default function NewPost() {
   const [imagePreview, setImagePreview] = useState(null)
-  
+  const [file, setFile] = useState(null);
+  const { startUpload } = useUploadThing("coverImageUploader");
+
   const formik = useFormik({
     initialValues: {
-      title: '',
-      category: '',
-      tags: '',
+      title: "",
+      category: "",
+      tags: "",
       featuredImage: null,
-      content: '# Write your post content here'
+      content: "# Write your post content here",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required('Title is required'),
-      category: Yup.string().required('Category is required'),
+      title: Yup.string().required("Title is required"),
+      category: Yup.string().required("Category is required"),
       tags: Yup.string(),
-      content: Yup.string().required('Content is required')
+      content: Yup.string().required("Content is required"),
     }),
-    onSubmit: (values) => {
-      // Handle form submission logic here
-      console.log(values)
-    },
-  })
+    onSubmit: async (values) => {
+      if (file) {
+        const res = await startUpload([file]);
+        console.log("Upload response:", res);
+        if (res) {
+          values.featuredImage = res[0].url;
+        }
+      }
 
-  // Handle markdown editor changes
+      try {
+        const response = await fetch("/api/posts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+
+        if (response.ok) {
+          console.log("Post created successfully");
+        } else {
+          console.error("Failed to create post");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+    },
+  });
+
   const handleContentChange = (value) => {
     formik.setFieldValue('content', value)
   }
 
-  // Handle file upload
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      formik.setFieldValue('featuredImage', file)
-      setImagePreview(file.name)
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImagePreview(selectedFile.name);
     }
   }
 
@@ -126,10 +149,9 @@ export default function NewPost() {
                     placeholder="e.g. react, javascript, design (comma separated)" 
                     className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
                   />
-                </div>
+                </div>  
               </div>
 
-              {/* Featured Image */}
               <div className="space-y-2">
                 <Label htmlFor="featuredImage" className="text-white">Featured Image</Label>
                 <div className="flex items-center gap-4">
@@ -139,7 +161,7 @@ export default function NewPost() {
                     className="border-gray-600 text-white hover:bg-gray-700"
                     onClick={() => document.getElementById('featuredImage').click()}
                   >
-                    <ImageIcon className="h-4 w-4 mr-2" /> Upload Image
+                    <ImageIcon className="h-4 w-4 mr-2" /> Select Image
                   </Button>
                   <span className="text-sm text-gray-400">
                     {imagePreview ? imagePreview : 'No image selected'}
@@ -198,3 +220,4 @@ export default function NewPost() {
     </div>
   )
 }
+

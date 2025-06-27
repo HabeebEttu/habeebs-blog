@@ -18,7 +18,8 @@ export default async function AdminPage() {
       title: "Total Posts",
       value: "24",
       Icon: FileText,
-      color: "blue",
+      textColor: "text-blue-500",
+      bgColor:""
     },
     {
       id: 2,
@@ -62,8 +63,8 @@ export default async function AdminPage() {
             />
             <Search className="text-[#01000548] absolute top-1/2 -translate-y-1/2 right-2 h-4 w-4" />
           </div>
-          <form method="POST" >
-          <LogOut />
+          <form method="POST">
+            <LogOut />
           </form>
         </div>
       </header>
@@ -73,22 +74,26 @@ export default async function AdminPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
           <Button className="bg-blue-700 hover:bg-blue-600">
-            <Link href="/admin/post/new">
+            <Link href="/admin/post/new" className='flex '>
               <Plus className="h-4 w-4 mr-2" />
+              New Post
             </Link>
-            New Post
           </Button>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {
-            stats.map((stat, index) => {
-              return (
-                <StatCard key={stat.id} title={stat.title} value={stat.value} Icon={stat.Icon} color={stat.color}/>
-              )
-            })
-          }
+          {stats.map((stat, index) => {
+            return (
+              <StatCard
+                key={stat.id}
+                title={stat.title}
+                value={stat.value}
+                Icon={stat.Icon}
+                color={stat.color}
+              />
+            );
+          })}
         </div>
 
         {/* Recent Posts Table */}
