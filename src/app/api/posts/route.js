@@ -1,3 +1,4 @@
+import { pusher } from '@/lib/pusher';
 import { db } from "@/app/db";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
@@ -88,7 +89,7 @@ export async function POST(request) {
                 category: {
                     connectOrCreate: {
                         where: { name: category },
-                        create: { name: category },
+                        create: { name: category, description: "" },
                     },
                 },
                 tags: {
@@ -105,6 +106,7 @@ export async function POST(request) {
             }
         });
         console.log("Post created successfully:", newPost.id);
+        await pusher.trigger('posts-channel', 'post-created', { post: newPost });
         return NextResponse.json(newPost, { status: 201 });
     } catch (error) {
         console.error("Failed to create post:", error.message);

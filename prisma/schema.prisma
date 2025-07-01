@@ -62,6 +62,7 @@ model Post {
   slug        String    @unique
   coverImage  String?
   content     String    @db.Text
+  views       Int?      @default(0)
   published   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -74,9 +75,10 @@ model Post {
 }
 
 model Category {
-  id        Int     @id @default(autoincrement())
-  name      String  @unique
-  posts     Post[]
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String
+  posts       Post[]
 }
 
 model Tag {

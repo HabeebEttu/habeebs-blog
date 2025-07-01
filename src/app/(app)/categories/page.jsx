@@ -9,7 +9,8 @@ import {
   FaDatabase,
 } from "react-icons/fa";
 
-export default function CategoriesPage() {
+export default async function CategoriesPage() {
+  
   const categories = [
     {
       title: "Frontend Development",

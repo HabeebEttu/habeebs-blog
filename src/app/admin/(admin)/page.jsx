@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+import React, { useState, useEffect } from 'react';
+import Pusher from 'pusher-js';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,17 +8,63 @@ import { LucidePenTool, Plus, Search, Settings, Users, FileText, BarChart } from
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import LogOut from '@/components/LogOut'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/auth'
 import StatCard from '@/components/StatCard'
+import PostRow from '@/components/PostRow'
 
-export default async function AdminPage() {
-  const session = await getServerSession(authOptions)
+export default function AdminPage() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+
+    const channel = pusher.subscribe('posts-channel');
+
+    const fetchPosts = async () => {
+      const postRes = await fetch("http://localhost:3000/api/posts/");
+      if (postRes.ok) {
+        const postsData = await postRes.json();
+        setPosts(postsData);
+      }
+    };
+
+    fetchPosts();
+
+    channel.bind('post-created', (data) => {
+      setPosts((prevPosts) => [data.post, ...prevPosts]);
+    });
+
+    channel.bind('post-updated', (data) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => (post.id === data.post.id ? data.post : post))
+      );
+    });
+
+    channel.bind('post-deleted', (data) => {
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== data.id));
+    });
+
+    return () => {
+      pusher.unsubscribe('posts-channel');
+    };
+  }, []);
+
+  const handleDeletePost = async (slug) => {
+    try {
+      await fetch(`http://localhost:3000/api/posts/${slug}`, {
+        method: "DELETE",
+      });
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
+  const noOfPosts = posts.length
   const stats = [
     {
       id: 1,
       title: "Total Posts",
-      value: "24",
+      value: noOfPosts,
       Icon: FileText,
       textColor: "text-blue-500",
       bgColor: "bg-blue-900/50",
@@ -46,9 +94,7 @@ export default async function AdminPage() {
       bgColor: "bg-orange-900/50",
     },
   ];
-  if (!session) {
-   redirect('/admin/login') 
-  }
+  
   return (
     <div className="bg-gray-900  w-full min-h-screen">
       <header className="flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 border-b-[0.5px] border-b-gray-800">
@@ -127,127 +173,12 @@ export default async function AdminPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {/* Sample row 1 */}
-                  <tr className="border-b border-gray-700 hover:bg-gray-700/50">
-                    <td className="py-3 px-4 text-sm">
-                      Building Scalable APIs with GraphQL
-                    </td>
-                    <td className="py-3 px-4 text-sm">Backend</td>
-                    <td className="py-3 px-4 text-sm">May 18, 2023</td>
-                    <td className="py-3 px-4 text-sm">
-                      <span className="px-2 py-1 bg-green-900/30 text-green-500 rounded-full text-xs">
-                        Published
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm">
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-blue-500"
-                          >
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                          </svg>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-red-500"
-                          >
-                            <path d="M3 6h18"></path>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                          </svg>
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                  {/* Sample row 2 */}
-                  <tr className="border-b border-gray-700 hover:bg-gray-700/50">
-                    <td className="py-3 px-4 text-sm">
-                      Modern CSS Techniques for Responsive Design
-                    </td>
-                    <td className="py-3 px-4 text-sm">Frontend</td>
-                    <td className="py-3 px-4 text-sm">May 12, 2023</td>
-                    <td className="py-3 px-4 text-sm">
-                      <span className="px-2 py-1 bg-yellow-900/30 text-yellow-500 rounded-full text-xs">
-                        Draft
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm">
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-blue-500"
-                          >
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                          </svg>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-red-500"
-                          >
-                            <path d="M3 6h18"></path>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                          </svg>
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
+                <tbody>{
+                  posts.map((post, idx) => {
+                   return <PostRow key={post.id} post={post} onDelete={() => handleDeletePost(post.slug)} />;
+                })
+                }
+                  
                 </tbody>
               </table>
             </div>
@@ -256,4 +187,4 @@ export default async function AdminPage() {
       </main>
     </div>
   );
-}
+} 

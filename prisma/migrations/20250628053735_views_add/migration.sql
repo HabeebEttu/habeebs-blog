@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `post` ADD COLUMN `views` INTEGER NULL DEFAULT 0;

@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
+import { redirect } from "next/navigation";
 import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "@/app/globals.css";
 import AdminApp from '@/components/AdminApp.jsx'
@@ -27,7 +30,12 @@ export const metadata = {
   description: "A blog application where users can view posts about their favorite developer technologies and leave comments about them.",
 };
 
-export default function AuthLayout({ children }) {
+export default async function AuthLayout({ children }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect("/admin/login");
+  }
   
   return (
     <html lang="en" className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}>

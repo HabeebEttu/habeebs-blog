@@ -20,16 +20,19 @@ const MDEditor = dynamic(
   { ssr: false }
 )
 
-export default function NewPost() {
+export default function EditPost({params}) {
   const [imagePreview, setImagePreview] = useState(null)
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
   const { startUpload } = useUploadThing("coverImageUploader");
   const [success, setSuccess] = useState(false);
+  const [post,setPost] = useState({})
 
+  
   if (success){
     redirect('/admin')
   }
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -44,16 +47,30 @@ export default function NewPost() {
         console.error('An error occurred while fetching categories:', error);
       }
     };
+
+    const getPost = async () => {
+      const { slug } = await params;
+      const res = await fetch(`/api/posts/${slug}`)
+      if(res.ok){
+        const postData = await res.json()
+        setPost(postData)
+      } else {
+        console.error('Failed to fetch post')
+      }
+    }
+    getPost()
     fetchCategories();
-  }, []);
+  }, [params.slug]);
+  
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      title: "",
-      category: "",
-      tags: "",
+      title: post?.title || '',
+      category: post?.category?.name || '',
+      tags: post?.tags?.map(tag => tag.name).join(', ') || '',
       featuredImage: null,
-      content: "# Write your post content here",
+      content: post?.content || '',
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
@@ -62,35 +79,35 @@ export default function NewPost() {
       content: Yup.string().required("Content is required"),
     }),
     onSubmit: async (values) => {
+      let coverImageURL = post.coverImage;
       if (file) {
         const res = await startUpload([file]);
-        console.log("Upload response:", res);
         if (res) {
-          values.featuredImage = res[0].url;
+          coverImageURL = res[0].url;
         }
       }
 
+      const finalValues = { ...values, featuredImage: coverImageURL };
+
       try {
-        const response = await fetch("/api/posts", {
-          method: "POST",
+        const response = await fetch(`/api/posts/${post.id}`, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(values),
+          body: JSON.stringify(finalValues),
         });
 
         if (response.ok) {
-          console.log("Post created successfully");
+          console.log("Post edited successfully");
           setSuccess(true)
           
         } else {
-          console.error("Failed to create post");
+          console.error("Failed to edit post");
         }
       } catch (error) {
         console.error("An error occurred:", error);
-      } finally {
-        
-      }
+      } 
     },
   });
 
@@ -164,6 +181,7 @@ export default function NewPost() {
                     Category
                   </Label>
                   <Select
+                    value={formik.values.category}
                     onValueChange={(value) =>
                       formik.setFieldValue("category", value)
                     }
@@ -282,4 +300,6 @@ export default function NewPost() {
     </div>
   );
 }
+
+
 
