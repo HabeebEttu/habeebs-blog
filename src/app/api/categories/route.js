@@ -2,6 +2,11 @@ import { db } from "@/app/db";
 import { NextResponse } from "next/server";
 
 export const GET = async (request) => {
-    const categories = await db.category.findMany();
+    const categories = await db.category.findMany({
+        include: {
+            posts: true,
+        },
+    });
     return NextResponse.json(categories);
 }
+

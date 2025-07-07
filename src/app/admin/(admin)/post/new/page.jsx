@@ -94,9 +94,7 @@ export default function NewPost() {
     },
   });
 
-  const handleContentChange = (value) => {
-    formik.setFieldValue('content', value)
-  }
+  
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -245,9 +243,8 @@ export default function NewPost() {
                     id="content"
                     name="content"
                     value={formik.values.content}
-                    onChange={handleContentChange}
+                    onChange={(value) => formik.setFieldValue("content", value)}
                     height={400}
-                    preview="edit"
                     className="bg-gray-700 border-gray-600"
                   />
                 </div>

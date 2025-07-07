@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button } from './ui/button'
 import Link from 'next/link'
-import axios from 'axios';
 
 export default function PostRow({ post, onDelete }) {
     const date = post?.createdAt;
@@ -14,11 +13,19 @@ export default function PostRow({ post, onDelete }) {
     
   return (
     <tr className="border-b border-gray-700 hover:bg-gray-700/50">
-      <td className="py-3 px-4 text-sm">{post?.title}</td>
+      <td className="py-3 px-4 text-sm hover:text-blue-500">
+        <Link href={`/post/${post?.slug}`}>{post?.title}</Link>
+      </td>
       <td className="py-3 px-4 text-sm">{post?.category?.name}</td>
       <td className="py-3 px-4 text-sm">{formattedDate}</td>
       <td className="py-3 px-4 text-sm">
-        <span className="px-2 py-1 bg-green-900/30 text-green-500 rounded-full text-xs">
+        <span
+          className={`px-2 py-1 ${
+            post?.published
+              ? "bg-green-900/30 text-green-500"
+              : "bg-red-900/30 text-red-500"
+          }  rounded-full text-xs`}
+        >
           {post.published ? "published" : "draft"}
         </span>
       </td>

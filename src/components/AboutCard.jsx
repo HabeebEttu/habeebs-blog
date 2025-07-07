@@ -1,6 +1,5 @@
 import React from 'react'
 import { Card, CardContent, CardHeader } from './ui/card'
-import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link';
 import { FaLinkedin, FaTwitter } from 'react-icons/fa'
@@ -11,9 +10,9 @@ import {} from 'react-icons/ai'
 export default function AboutCard({authorname,role,about}) {
   return (
     <Card
-      className={cn(
+      className={
         "flex flex-col w-full max-w-md border-none rounded-lg ml-24 my-5 overflow-hidden"
-      )}
+      }
     >
       <CardHeader className=" h-[128px] bg-gradient-to-r from-blue-500 to-purple-600 relative ">
         <Image
@@ -24,7 +23,7 @@ export default function AboutCard({authorname,role,about}) {
           className="rounded-full  border-white border-4 absolute -bottom-10 z-40"
         />
       </CardHeader>
-      <CardContent className={cn("flex flex-col")}>
+      <CardContent className={"flex flex-col"}>
         <h1 className="mt-14 capitalize text-lg font-semibold">{authorname}</h1>
         <p className="mt-1 text-sm text-gray-500 font-thin">{role}</p>
         <p className="text-gray-500 mt-3">{about}</p>

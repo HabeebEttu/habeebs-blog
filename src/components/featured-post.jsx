@@ -4,26 +4,33 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 
-export default function FeaturedPost() {
+export default function FeaturedPost({ post }) {
+  const date = post?.createdAt;
+  const formattedDate = new Date(date).toLocaleDateString("en-US", {
+    weekday: "long", 
+    year: "numeric", 
+    month: "long", 
+    day: "numeric",
+  });
   return (
-    <div className="py-[40px] px-[12px] flex items-center justify-center">
+    <div className="py-[40px] px-[12px] flex items-center justify-center ">
       <div className="w-[85vw] h-[370px] rounded-xl overflow-hidden px-[24px] pt-[80px] bg-gray relative group">
         <Image
-          src="/blog-post.jpg"
-          alt="post-image"
+          src={post.coverImage}
+          alt={post.title}
           fill
           className="absolute top-0 left-0 w-full h-full object-top transition-transform duration-500 group-hover:cursor-pointer group-hover:scale-105"
         />
-
+        <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         <div className="absolute top-0 left-0 w-full h-full flex flex-col px-[48px]">
           {/* Category Label */}
           <div className="bg-blue-700 rounded-md mt-[48px] px-[8px] py-[2px] w-full">
-            <p className="text-white text-[12px]">Techology</p>
+            <p className="text-white text-[12px]">{post?.category?.name}</p>
           </div>
 
           {/* Title */}
           <div className="mt-[20px] font-bold text-[28px] max-w-[600px] text-white leading-[36px]">
-            <p>The Future of Web Development: Trends to Watch in 2025</p>
+            <p>{post?.title}</p>
           </div>
 
           {/* Description */}
@@ -34,7 +41,7 @@ export default function FeaturedPost() {
 
           {/* Meta Info */}
           <div className="text-[12px] text-white py-[12px]">
-            May 20, 2025 · 8 min read
+            {formattedDate}· 8 min read
           </div>
 <div className="py-6"></div>
           {/* Button */}

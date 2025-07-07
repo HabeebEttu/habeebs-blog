@@ -6,13 +6,19 @@ import LatestPosts from "@/components/LatestPosts";
 import PopularPosts from "@/components/PopularPosts";
 import Suscribe from "@/components/Suscribe";
 
-export default function Home() {
+export default async function Home() {
+  const postResponse = await fetch('http://localhost:3000/api/posts')
+  let posts;
+  if (postResponse.ok) {
+    posts = await postResponse.json()
+  }
+  const featuredPost = posts[0]
   return (
     <div className="bg-gray-900 w-full min-h-screen">
       
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
-        <FeaturedPost />
+        <FeaturedPost post={featuredPost}/>
         <LatestPosts />
 
         <AboutCard

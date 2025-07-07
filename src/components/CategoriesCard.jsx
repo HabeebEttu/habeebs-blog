@@ -1,43 +1,29 @@
-import React from 'react'
+"use client";
+import React, { useState, useEffect } from 'react'
 import { Card, CardHeader } from './ui/card'
 import { cn } from '@/lib/utils'
 import Category from './Category'
 
-
-const categories = [
-  {
-    id: 1,
-    name: "frontend development",
-    amount: 14,
-  },
-  {
-    id: 2,
-    name: "backend development",
-    amount: 18,
-  },
-  {
-    id: 3,
-    name: "AI / ML",
-    amount: 20,
-  },
-  {
-    id: 4,
-    name: "UI/UX",
-    amount: 10,
-  },
-  {
-    id: 5,
-    name: "DevOps",
-    amount: 23,
-  },
-  {
-    id: 6,
-    name: "career development",
-    amount: 14,
-  },
-  
-];
 export default function CategoriesCard() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <Card
       className={cn(
@@ -46,11 +32,11 @@ export default function CategoriesCard() {
     >
       <h1 className="tetx-lg font-bold">Categories</h1>
       <div className=" flex flex-col gap-3">
-        {categories.map((category, _) => {
+        {categories.map((category) => {
           return (
             <Category
               key={category.id}
-              amount={category.amount}
+              amount={category.posts.length}
               categoryName={category.name}
             />
           );
@@ -59,3 +45,4 @@ export default function CategoriesCard() {
     </Card>
   );
 }
+

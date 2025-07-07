@@ -54,6 +54,7 @@ export default function EditPost({params}) {
       if(res.ok){
         const postData = await res.json()
         setPost(postData)
+        console.log("Fetched post data:", postData);
       } else {
         console.error('Failed to fetch post')
       }
@@ -79,6 +80,7 @@ export default function EditPost({params}) {
       content: Yup.string().required("Content is required"),
     }),
     onSubmit: async (values) => {
+      console.log("Submitting form with values:", values);
       let coverImageURL = post.coverImage;
       if (file) {
         const res = await startUpload([file]);
@@ -111,9 +113,7 @@ export default function EditPost({params}) {
     },
   });
 
-  const handleContentChange = (value) => {
-    formik.setFieldValue('content', value)
-  }
+  
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -263,9 +263,8 @@ export default function EditPost({params}) {
                     id="content"
                     name="content"
                     value={formik.values.content}
-                    onChange={handleContentChange}
+                    onChange={(value) => formik.setFieldValue("content", value)}
                     height={400}
-                    preview="edit"
                     className="bg-gray-700 border-gray-600"
                   />
                 </div>

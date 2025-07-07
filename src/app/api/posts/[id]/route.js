@@ -1,105 +1,104 @@
-import { pusher } from '@/lib/pusher';
+
 import { db } from "@/app/db";
 import { NextResponse } from "next/server";
+import { pusher } from '@/lib/pusher';
 
-export async function GET(request, { params }) {
-    const { id } = await params;
-    const numericId = parseInt(id, 10);
+export const GET = async (request, { params }) => {
+  const { id } = await params;
 
-    let post;
-
-    if (!isNaN(numericId)) {
-        post = await db.post.findUnique({
-            where: { id: numericId },
-            include: { author: true, category: true, tags: true, comments: true },
-        });
-    }
-
-    if (!post) {
-        post = await db.post.findUnique({
-            where: { slug: id },
-            include: { author: true, category: true, tags: true, comments: true },
-        });
-    }
-
-    if (!post) {
-        return NextResponse.json({ error: "Post not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(post);
-}
-
-export async function PUT(request, { params }) {
-    const { title, content, category, tags, featuredImage } =
-      await request.json();
-
-    const categoryRecord = await db.category.findUnique({
-        where: { name: category },
-    });
-
-    if (!categoryRecord) {
-        return NextResponse.json({ error: "Category not found" }, { status: 400 });
-    }
-
-    const tagRecords = await Promise.all(
-        tags.split(',').map(async (tagName) => {
-            const name = tagName.trim()
-            let tag = await db.tag.findUnique({ where: { name } });
-            if (!tag) {
-                tag = await db.tag.create({ data: { name } });
-            }
-            return tag;
-        })
-    );
-    const {id} = await params;
-    const updatedPost = await db.post.update({
-        where: {
-            id: parseInt(id)
-        },
-        data: {
-            title,
-            content,
-            categoryId: categoryRecord.id,
-            coverImage:featuredImage,
-            tags: {
-                set: tagRecords.map(tag => ({ id: tag.id }))
-            }
-        },
-        include: {
-            author: true, category: true, tags: true
-        }
-    });
-    await pusher.trigger('posts-channel', 'post-updated', { post: updatedPost });
-    return NextResponse.json(updatedPost);
-}
-
-export async function DELETE(request, { params }) {
-    const { id } = await params;
     try {
-        const post = await db.post.findUnique({
-            where: {
-                slug: id,
-            },
-        });
+      if(isNaN(parseInt(id))){
 
+      
+        const post = await db.post.findUnique({
+          where: { slug: id },
+          include: {
+            author: true,
+            category: true,
+            tags: true,
+            comments: true,
+          },
+        });
         if (!post) {
-            return NextResponse.json({ error: "Post not found" }, { status: 404 });
+          return NextResponse.json(
+            { error: "Post not found" },
+            { status: 404 }
+          );
         }
 
-        await db.post.delete({
-            where: {
-                id: post.id,
-            },
+        return NextResponse.json(post);
+}else{
+    const post = await db.post.findUnique({
+      where: { id:parseInt(id) },
+      include: {
+        author: true,
+        category: true,
+        tags: true,
+        comments: true,
+      },
+    });
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(post);      
+}
+    
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
+  }
+};
+
+export const DELETE = async (request, { params }) => {
+    const { id } = await params;
+
+    try {
+        const post = await db.post.delete({
+            where: { id },
         });
 
-        await pusher.trigger('posts-channel', 'post-deleted', { id: post.id });
+        await pusher.trigger('posts-channel', 'post-deleted', { id });
 
-        return NextResponse.json({ message: "Post deleted" });
+        return NextResponse.json(post);
     } catch (error) {
         console.error("Error deleting post:", error);
-        return NextResponse.json(
-            { error: "Something went wrong" },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
     }
-}
+};
+
+export const PUT = async (request, { params }) => {
+    const id = parseInt(await params.id);
+    console.log("PUT request received for post ID/slug:", id);
+    const body = await request.json();
+    console.log("Request body:", body);
+    const { title, content, category, tags, featuredImage } = body;
+
+    try {
+        const updatedPost = await db.post.update({
+            where: { id: id }, // Assuming 'id' from params is the database ID
+            data: {
+                title,
+                content,
+                coverImage: featuredImage,
+                category: {
+                    connectOrCreate: {
+                        where: { name: category },
+                        create: { name: category },
+                    },
+                },
+                tags: {
+                    set: [], // Clear existing tags
+                    connectOrCreate: tags.split(',').map(name => name.trim()).filter(Boolean).map(name => ({
+                        where: { name },
+                        create: { name },
+                    })),
+                },
+            },
+        });
+        console.log("Post updated successfully:", updatedPost.id);
+        return NextResponse.json(updatedPost);
+    } catch (error) {
+        return NextResponse.json({ error: error.message || "An unexpected error occurred", fullError: JSON.stringify(error, Object.getOwnPropertyNames(error)) }, { status: 500 });
+    }
+};

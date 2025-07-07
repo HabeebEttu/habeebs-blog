@@ -1,45 +1,44 @@
 'use client'
-import React, { useState, useEffect } from 'react';
-import Pusher from 'pusher-js';
+import React, {useState, useEffect} from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LucidePenTool, Plus, Search, Settings, Users, FileText, BarChart } from 'lucide-react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import LogOut from '@/components/LogOut'
 import StatCard from '@/components/StatCard'
 import PostRow from '@/components/PostRow'
+import Pusher from 'pusher-js';
 
 export default function AdminPage() {
   const [posts, setPosts] = useState([]);
+  const [noOfCategories, setNoOfCategories] = useState(0);
 
   useEffect(() => {
+    const fetchPosts = async () => {
+      const postRes = await fetch('http://localhost:3000/api/posts');
+      if (postRes.ok) {
+        const posts = await postRes.json();
+        setPosts(posts);
+      }
+    };
+
+    const fetchCategories = async () => {
+      const categoryResponse = await fetch('http://localhost:3000/api/categories');
+      if (categoryResponse.ok) {
+        const categories = await categoryResponse.json();
+        setNoOfCategories(categories.length);
+      }
+    };
+
+    fetchPosts();
+    fetchCategories();
+
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
 
     const channel = pusher.subscribe('posts-channel');
-
-    const fetchPosts = async () => {
-      const postRes = await fetch("http://localhost:3000/api/posts/");
-      if (postRes.ok) {
-        const postsData = await postRes.json();
-        setPosts(postsData);
-      }
-    };
-
-    fetchPosts();
-
-    channel.bind('post-created', (data) => {
-      setPosts((prevPosts) => [data.post, ...prevPosts]);
-    });
-
-    channel.bind('post-updated', (data) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) => (post.id === data.post.id ? data.post : post))
-      );
-    });
 
     channel.bind('post-deleted', (data) => {
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== data.id));
@@ -50,16 +49,7 @@ export default function AdminPage() {
     };
   }, []);
 
-  const handleDeletePost = async (slug) => {
-    try {
-      await fetch(`http://localhost:3000/api/posts/${slug}`, {
-        method: "DELETE",
-      });
-    } catch (error) {
-      console.error("Failed to delete post:", error);
-    }
-  };
-  const noOfPosts = posts.length
+  const noOfPosts = posts.length;
   const stats = [
     {
       id: 1,
@@ -88,7 +78,7 @@ export default function AdminPage() {
     {
       id: 4,
       title: "Categories",
-      value: "8",
+      value: noOfCategories,
       Icon: Settings,
       textColor: "text-orange-500",
       bgColor: "bg-orange-900/50",
@@ -173,11 +163,14 @@ export default function AdminPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{
-                  posts.map((post, idx) => {
-                   return <PostRow key={post.id} post={post} onDelete={() => handleDeletePost(post.slug)} />;
-                })
-                }
+                <tbody>
+                  {
+                    posts.map((post, index) => {
+                      return(<PostRow post={post} key={post.slug} onDelete={async () => {
+                        await fetch(`http://localhost:3000/api/posts/${post.id}`, { method: 'DELETE' });
+                      }}/>)
+                    })
+                  }
                   
                 </tbody>
               </table>

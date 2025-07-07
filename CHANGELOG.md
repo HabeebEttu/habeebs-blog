@@ -1,0 +1,23 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+### Added
+- Implemented real-time post updates using Pusher.js.
+- Added real-time post deletion to the admin dashboard.
+
+### Changed
+- Used `remark` to parse and render Markdown content for blog posts.
+- Styled the post slug page to match the rest of the application.
+- Standardized the size of `ArticleCard` components.
+- Implemented dynamic categories on the homepage.
+
+### Fixed
+- Prevented stripping of whitespace and newlines from post content upon saving.
+- Ensured whitespace and newlines are preserved when editing existing posts.
+- Corrected post fetching in API to use database ID instead of slug for consistency.
+- Awaited `params` in API routes to correctly access dynamic route parameters.
+- Fixed Prisma validation error by removing `description` from `connectOrCreate` for categories in PUT route.
+- Converted post ID to integer in PUT API route to match Prisma's expected type.

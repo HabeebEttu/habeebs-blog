@@ -1,29 +1,8 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
-import { redirect } from "next/navigation";
-import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "@/app/globals.css";
 import AdminApp from '@/components/AdminApp.jsx'
 import { Toaster } from "react-hot-toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
-const roboto = Roboto({
-  variable: "--font-roboto",
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata = {
   title: "DevInsights",
@@ -31,18 +10,13 @@ export const metadata = {
 };
 
 export default async function AuthLayout({ children }) {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/admin/login");
-  }
   
   return (
-    <html lang="en" className={`${roboto.variable} ${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={``}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${roboto.className} antialiased`}>
+      <body className={` antialiased`}>
         <Toaster position="top-right" />
         <AdminApp>{children}</AdminApp>
       </body>
