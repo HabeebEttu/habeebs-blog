@@ -18,7 +18,7 @@ export default function ArticleCard({
     <Link href={`/post/${slug}`}>
       <Card
         className={cn(
-          "flex flex-col w-[350px] pb-8 h-fit overflow-hidden bg-gray-800/50 mt-[28px] border-0"
+          "flex flex-col w-[350px] pb-8 h-[450px] overflow-hidden bg-gray-800/50 mt-[28px] border-0"
         )}
       >
         <div className="relative group h-[226px]">
@@ -45,7 +45,7 @@ export default function ArticleCard({
           {title}
         </CardTitle>
 
-        <div className="px-[24px] text-[13px] text-gray-500 dark:text-gray-400 line-clamp-3 h-fit overflow-hidden">
+        <div className="px-[24px] text-[13px] text-gray-500 dark:text-gray-400 line-clamp-3 h-[60px] overflow-hidden">
           {description}
         </div>
       </Card>

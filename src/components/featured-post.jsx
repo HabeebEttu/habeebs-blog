@@ -14,7 +14,7 @@ export default function FeaturedPost({ post }) {
   });
   return (
     <div className="py-[40px] px-[12px] flex items-center justify-center ">
-      <div className="w-[85vw] h-[370px] rounded-xl overflow-hidden px-[24px] pt-[80px] bg-gray relative group">
+      <div className="w-[85vw] h-[370px] rounded-xl overflow-hidden px-[24px] pt-[80px] relative group">
         <Image
           src={post.coverImage}
           alt={post.title}

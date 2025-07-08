@@ -27,7 +27,7 @@ export default function CategoriesCard() {
   return (
     <Card
       className={cn(
-        "flex flex-col w-[414px] border-none rounded-lg m-5 ml-24 overflow-hidden p-6"
+        "flex flex-col w-[414px] h-fit border-none rounded-lg m-5 ml-24 overflow-hidden p-6"
       )}
     >
       <h1 className="tetx-lg font-bold">Categories</h1>

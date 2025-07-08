@@ -119,3 +119,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bg-fixed {
+  background-attachment: fixed;
+}

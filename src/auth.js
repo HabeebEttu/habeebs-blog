@@ -1,23 +1,18 @@
-// app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { db } from "@/app/db"; // ensure this is your Prisma client
+import { db } from "@/app/db";
+import github from "next-auth/providers/github";
+import credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
-import bcrypt from "bcryptjs"; // or "bcrypt" if you're using it instead
-import Credentials from "next-auth/providers/credentials";
-
-export const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
-
   providers: [
-    GithubProvider({
+    github({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
-
-    Credentials({
+    credentials({
       name: "credentials",
       credentials: {
         email: {
@@ -29,7 +24,6 @@ export const authOptions = {
           label: "Password",
           type: "password",
           placeholder: "*****",
-          
         },
       },
       async authorize(credentials) {
@@ -61,13 +55,12 @@ export const authOptions = {
       },
     }),
   ],
-
   session: {
     strategy: "jwt",
   },
 
   pages: {
-    signIn: "/admin/login", // your custom login page
+    signIn: "/admin/login",
   },
 
   callbacks: {
@@ -79,13 +72,9 @@ export const authOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id; 
+        session.user.id = token.id;
       }
       return session;
     },
   },
-};
-
-const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST };
+});

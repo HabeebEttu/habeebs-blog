@@ -11,6 +11,7 @@ export default async function Home() {
   let posts;
   if (postResponse.ok) {
     posts = await postResponse.json()
+    console.log(posts)
   }
   const featuredPost = posts[0]
   return (
