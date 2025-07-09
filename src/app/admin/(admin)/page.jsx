@@ -9,6 +9,9 @@ import LogOut from '@/components/LogOut'
 import StatCard from '@/components/StatCard'
 import PostRow from '@/components/PostRow'
 import Pusher from 'pusher-js';
+import { authOptions } from "@/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 export default function AdminPage() {
   const [posts, setPosts] = useState([]);
@@ -30,10 +33,16 @@ export default function AdminPage() {
         setNoOfCategories(categories.length);
       }
     };
+    const redirectToLogin= async()=>{
+      const session = await getServerSession(authOptions);
+      if (!session) {
+        redirect("/admin/login");
+      }
+    }
 
     fetchPosts();
     fetchCategories();
-
+    redirectToLogin();
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });

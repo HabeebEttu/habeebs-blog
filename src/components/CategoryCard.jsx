@@ -1,5 +1,6 @@
 import { darkenHex } from '@/app/utils/util';
 import { LucideGlobe } from 'lucide-react'
+import Link from 'next/link';
 import React from 'react'
 const colors = [
   "#3B82F6", // blue-500
@@ -11,11 +12,9 @@ const colors = [
   "#6366F1", // indigo-500
   "#14B8A6",
 ];
-const tags = [
-  ''
-]
+ 
 
-export default function CategoryCard({ title, description, noOfPosts ,Icon}) {
+export default function CategoryCard({ title, description, noOfPosts ,Icon,link}) {
     const color = colors[Math.floor(Math.random() * colors.length)]
     const secondColor = darkenHex(color)
   return (
@@ -30,11 +29,13 @@ export default function CategoryCard({ title, description, noOfPosts ,Icon}) {
           {noOfPosts} posts
         </span>
       </div>
-      <div className="text-white capitalize text-lg text-left my-5">{title}</div>
-      <div className="text-gray-600 text-sm text-left text-wrap">{description}</div>
-      <div className="flex flex-wrap items-center justify-start">
-
+      <div className="text-white capitalize text-lg text-left my-5">
+        <Link href={link}>{title}</Link>
       </div>
+      <div className="text-gray-600 text-sm text-left text-wrap">
+        {description}
+      </div>
+      <div className="flex flex-wrap items-center justify-start"></div>
     </div>
   );
 }

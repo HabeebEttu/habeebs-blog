@@ -89,7 +89,7 @@ export async function POST(request) {
                 category: {
                     connectOrCreate: {
                         where: { name: category },
-                        create: { name: category,},
+                        create: { name: category,description:""},
                     },
                 },
                 tags: {

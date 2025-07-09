@@ -10,51 +10,23 @@ import {
 } from "react-icons/fa";
 
 export default async function CategoriesPage() {
-  
-  const categories = [
-    {
-      title: "Frontend Development",
-      description:
-        "Explore modern frontend technologies including React, Vue, Angular, and responsive web design principles.",
-      noOfPosts: 20,
-      icon: FaReact,
-    },
-    {
-      title: "Backend Development",
-      description:
-        "Deep dive into server-side programming, APIs, databases, and cloud infrastructure.",
-      noOfPosts: 10,
-      icon: FaServer,
-    },
-    {
-      title: "UI/UX Design",
-      description:
-        "Learn about user interface design, user experience principles, and design tools.",
-      noOfPosts: 5,
-      icon: FaPaintBrush,
-    },
-    {
-      title: "DevOps",
-      description:
-        "Discover continuous integration, deployment, and modern infrastructure management.",
-      noOfPosts: 8,
-      icon: FaDocker,
-    },
-    {
-      title: "Mobile Development",
-      description:
-        "Build native and cross-platform mobile applications using React Native and Flutter.",
-      noOfPosts: 15,
-      icon: FaMobile,
-    },
-    {
-      title: "Data Science",
-      description:
-        "Explore data analysis, machine learning, and artificial intelligence concepts.",
-      noOfPosts: 12,
-      icon: FaDatabase,
-    },
+  const categoriesRes = await fetch('http://localhost:3000/api/categories', {
+    cache: "no-store",
+  })
+  let categories
+  if(categoriesRes.ok){
+    categories = await categoriesRes.json()
+    }
+  const icons = [
+    FaReact,
+    FaServer,
+    FaPaintBrush,
+    FaDocker,
+    FaMobile,
+    FaDatabase,
   ];
+  
+  
   return (
     <div className="bg-gray-900">
       <div className="pt-10"></div>
@@ -70,10 +42,11 @@ export default async function CategoriesPage() {
         {categories.map((category, index) => (
           <CategoryCard
             key={index}
-            title={category.title}
+            title={category?.name}
             description={category.description}
-            noOfPosts={category.noOfPosts}
-            Icon={category.icon}
+            noOfPosts={category?._count.posts}
+            Icon={icons[index]}
+            link={`/categories/${category?.id}`}
           />
         ))}
       </div>

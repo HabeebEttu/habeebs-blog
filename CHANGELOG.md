@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Allowed anonymous commenting on posts by removing session requirement.
 
 ### Fixed
+- Fixed 405 'Method Not Allowed' error on admin login by correctly configuring NextAuth.js for App Router.
 - Prevented stripping of whitespace and newlines from post content upon saving.
 - Ensured whitespace and newlines are preserved when editing existing posts.
 - Corrected post fetching in API to use database ID instead of slug for consistency.

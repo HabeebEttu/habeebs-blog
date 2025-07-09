@@ -1,8 +1,10 @@
 import "@/app/globals.css";
 import AdminApp from '@/components/AdminApp.jsx'
 import { Toaster } from "react-hot-toast";
-import { auth } from "@/auth";
+import { authOptions } from "@/auth";
+import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+
 
 
 
@@ -12,10 +14,7 @@ export const metadata = {
 };
 
 export default async function AuthLayout({ children }) {
-  const session = await auth();
-  if (!session) {
-    redirect('/admin/login');
-  }
+  
   return (
     <html lang="en" className={``}>
       <head>

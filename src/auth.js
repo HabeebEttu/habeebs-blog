@@ -5,7 +5,9 @@ import github from "next-auth/providers/github";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+
+
+export const authOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     github({
@@ -77,4 +79,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-});
+};
+
+export const { auth, signIn, signOut } = NextAuth(authOptions);

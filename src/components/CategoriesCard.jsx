@@ -36,7 +36,7 @@ export default function CategoriesCard() {
           return (
             <Category
               key={category.id}
-              amount={category.posts.length}
+              amount={category?._count.posts}
               categoryName={category.name}
             />
           );

@@ -15,5 +15,10 @@ export const GET = async (request, { params }) => {
             
         }
     });
+
+    if (!category) {
+        return new NextResponse("Category not found", { status: 404 });
+    }
+
     return NextResponse.json(category);
 }
