@@ -72,30 +72,30 @@ export default function PostPage({ params }) {
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{post.title}</h1>
-          <div className="flex items-center text-gray-400 mb-8">
+          <div className="flex items-center text-gray-500 dark:text-gray-400 mb-8">
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
             <span className="mx-4">•</span>
             <span>{post.category.name}</span>
           </div>
           <img src={post.coverImage} alt={post.title} className="w-full h-auto rounded-lg mb-8" />
-          <div className="prose prose-invert prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+          <div className="prose dark:prose-invert prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
 
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-4">Comments</h2>
             <form onSubmit={handleSubmitComment} className="mb-8">
               <input
                 type="text"
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                className="w-full p-3 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
                 placeholder="Your Name (optional)"
                 value={commenterName}
                 onChange={(e) => setCommenterName(e.target.value)}
               />
               <textarea
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows="4"
                 placeholder="Write your comment..."
                 value={newComment}
@@ -112,16 +112,16 @@ export default function PostPage({ params }) {
             <div className="space-y-6">
               {comments.length > 0 ? (
                 comments.map((comment) => (
-                  <div key={comment.id} className="bg-gray-800 p-4 rounded-md">
+                  <div key={comment.id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
                     <div className="flex items-center mb-2">
-                      <p className="font-semibold text-blue-400">{comment.author.name || "Anonymous"}</p>
-                      <span className="text-gray-500 text-sm ml-2">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                      <p className="font-semibold text-blue-600 dark:text-blue-400">{comment.author.name || "Anonymous"}</p>
+                      <span className="text-gray-500 dark:text-gray-400 text-sm ml-2">{new Date(comment.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <p className="text-gray-300">{comment.content}</p>
+                    <p className="text-gray-800 dark:text-gray-300">{comment.content}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-400">No comments yet. Be the first to comment!</p>
+                <p className="text-gray-500 dark:text-gray-400">No comments yet. Be the first to comment!</p>
               )}
             </div>
           </div>

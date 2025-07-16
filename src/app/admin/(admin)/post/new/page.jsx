@@ -13,7 +13,7 @@ import * as Yup from 'yup'
 import { useUploadThing } from "@/lib/uploadthing";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default),

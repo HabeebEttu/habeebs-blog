@@ -3,6 +3,9 @@ import "@/app/globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/Footer";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
+
 
 export const metadata = {
   title: "DevInsights",
@@ -19,9 +22,17 @@ export default function RootLayout({ children }) {
       </head>
       <body className={` antialiased bg-fixed`}>
         <SessionProviderWrapper>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
           <Header />
           {children}
           <Footer />
+          <Toaster/>
+          </ThemeProvider>
         </SessionProviderWrapper>
       </body>
     </html>

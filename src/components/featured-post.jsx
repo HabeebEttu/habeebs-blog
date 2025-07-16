@@ -19,7 +19,7 @@ export default function FeaturedPost({ post }) {
           src={post.coverImage}
           alt={post.title}
           fill
-          className="absolute top-0 left-0 w-full h-full object-top transition-transform duration-500 group-hover:cursor-pointer group-hover:scale-105"
+          className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:cursor-pointer group-hover:scale-105"
         />
         <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
         <div className="absolute top-0 left-0 w-full h-full flex flex-col px-[48px]">

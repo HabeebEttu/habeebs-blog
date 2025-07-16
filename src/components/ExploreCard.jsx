@@ -11,7 +11,7 @@ export default function ExploreCard({imgSrc,topic}) {
         src={imgSrc}
         alt={topic}
         width={294}
-              height={256}
+        height={256}
         className="absolute top-0 left-0 w-full h-full object-cover backdrop-brightness-0 z-10 "
       />
       <div className="absolute top-0 left-0 w-full h-[256px] z-30">

@@ -6,6 +6,8 @@ import { ChevronDown, FilterIcon, Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ArticleCard from "./ArticleCard";
 
+import FilterPosts from './FilterPosts';
+
 export default function LatestPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,16 +55,7 @@ export default function LatestPosts() {
             </h4>
           </div>
           <div className="flex items-center justify-center gap-2">
-            <Button
-              variant="default"
-              size="sm"
-              className={cn(
-                "bg-white hover:cursor-pointer text-black text-xs px-2 py-0.5 flex items-center gap-2 w-fit rounded-sm"
-              )}
-            >
-              <FilterIcon className="text-[10px]" fill="black" />
-              Filter
-            </Button>
+            <FilterPosts setPosts={setPosts} setLoading={setLoading} />
             <Button
               variant="default"
               size="sm"

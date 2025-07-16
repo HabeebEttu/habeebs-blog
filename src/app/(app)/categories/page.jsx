@@ -28,12 +28,12 @@ export default async function CategoriesPage() {
   
   
   return (
-    <div className="bg-gray-900">
+    <div className="bg-white dark:bg-gray-900">
       <div className="pt-10"></div>
-      <h1 className="text-white text-center text-5xl py-10 font-bold">
+      <h1 className="text-black dark:text-white text-center text-5xl py-10 font-bold">
         Browse Categories
       </h1>
-      <h5 className="text-center w-[50vw] text-xl text-gray-500 mx-auto">
+      <h5 className="text-center w-[50vw] text-xl text-gray-500 dark:text-gray-400 mx-auto">
         Explore our comprehensive collection of development topics, frameworks,
         and technologies. Find exactly what you're looking for or discover
         something new to learn.

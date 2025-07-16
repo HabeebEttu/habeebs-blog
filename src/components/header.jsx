@@ -1,16 +1,28 @@
-import { LucidePenTool, Search } from "lucide-react";
+"use client";
+import { Menu, Moon, Search, Sun } from "lucide-react";
 import React from "react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet.jsx";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/categories", label: "Category" },
+  { href: "/about", label: "About" },
+];
 
 export default function Header() {
+  const { theme, setTheme } = useTheme();
+
   return (
-    <header className="flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 border-b-[0.5px] border-b-gray-800 bg-gray-900">
+    <header className="flex items-center justify-between py-4 px-4 sm:px-6 lg:px-8 border-b-[0.5px]">
       <div className="flex items-center space-x-2">
-        <LucidePenTool className="h-6 w-6 text-primary text-blue-600" />
-        <span className="text-xl font-bold text-blue-600">DevInsights</span>
+        <Link href="/" className="flex items-center space-x-2">
+          <span className="text-xl font-bold ">DevInsights</span>
+        </Link>
       </div>
 
       {/* Search Section */}
@@ -23,18 +35,45 @@ export default function Header() {
 
       {/* Navigation Section */}
       <div className="flex items-center space-x-4">
-        <nav className="hidden md:flex space-x-4 text-blue-600">
-          <Button variant="ghost">
-            <Link href="/">Home</Link>
-          </Button>
-          <Button variant="ghost">
-            <Link href="/categories">Category</Link>
-          </Button>
-          <Button variant="ghost">
-            <Link href="/about">About</Link>
-          </Button>
+        <nav className="hidden md:flex space-x-4">
+          {navLinks.map((link) => (
+            <Button variant="ghost" asChild key={link.href}>
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          ))}
         </nav>
-        <Button className={cn(" bg-white text-black")}>Subscribe</Button>
+
+        {/* Theme Switcher */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+        >
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+
+        <Button className={cn("hidden md:flex")}>Subscribe</Button>
+
+        {/* Mobile Navigation */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <nav className="flex flex-col space-y-4 mt-8">
+              {navLinks.map((link) => (
+                <Link href={link.href} key={link.href}>
+                  {link.label}
+                </Link>
+              ))}
+              <Button>Subscribe</Button>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );
